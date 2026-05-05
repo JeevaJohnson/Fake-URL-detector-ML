@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import tldextract
 from model_utilities import model_predict
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 
