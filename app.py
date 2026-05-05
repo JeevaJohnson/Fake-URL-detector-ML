@@ -3,6 +3,45 @@ import tldextract
 from model_utilities import model_predict
 from urllib.parse import urlparse
 
+# =========================
+# ⚙️ CONSTANTS (CLEAN)
+# =========================
+
+SUSPICIOUS_KEYWORDS = [
+    "login", "signin", "secure", "verify", "verification",
+    "account", "update", "confirm", "password",
+    "authentication", "session", "validate", "validation",
+    "auth", "access", "security", "alert", "bank", "payment"
+]
+
+TRUSTED_DOMAINS = [
+    "google.com", "amazon.in", "amazon.com",
+    "facebook.com", "paypal.com", "microsoft.com",
+    "wikipedia.org", "github.com", "stackoverflow.com", "python.org"
+]
+
+HOSTING_DOMAINS = [
+    "github.io", "netlify.app", "vercel.app",
+    "firebaseapp.com", "herokuapp.com",
+    "onrender.com", "pages.dev", "glitch.me"
+]
+
+SHORTENERS = [
+    "bit.ly", "tinyurl.com", "t.co", "goo.gl", "ow.ly"
+]
+
+KNOWN_BRANDS = [
+    "google", "amazon", "paypal", "facebook",
+    "hdfc", "icici", "sbi"
+]
+
+TRUSTED_BRANDS = [
+    "google", "amazon", "paypal", "microsoft",
+    "bank", "apple", "hdfc", "icici", "sbi"
+]
+
+LEGIT_WORDS = ["wiki", "docs", "api", "github", "stackoverflow"]
+
 app = Flask(__name__)
 
 import re
