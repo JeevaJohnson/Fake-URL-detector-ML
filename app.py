@@ -2,6 +2,13 @@ from flask import Flask, request, jsonify
 import tldextract
 from model_utilities import model_predict
 from urllib.parse import urlparse
+import requests
+import socket
+import ssl
+import whois
+from datetime import datetime
+from functools import lru_cache
+
 
 # =========================
 # ⚙️ CONSTANTS (CLEAN)
