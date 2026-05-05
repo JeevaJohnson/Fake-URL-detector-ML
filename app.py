@@ -113,6 +113,7 @@ def build_output(label, confidence, reasons, is_https):
 
     
 def final_decision(url):
+    print("NEW CODE RUNNING")
     url = normalize_url(url)
 
     parsed = urlparse(url)
