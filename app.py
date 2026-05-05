@@ -104,7 +104,55 @@ def has_ssl(domain):
     except:
         return None   # ← NOT False
 
+def normalize_text(s):
+    return s.lower().replace("0", "o").replace("1", "l").replace("3", "e")
 
+
+import tldextract
+
+TRUSTED_DOMAINS = [
+    "google.com",
+    "facebook.com",
+    "amazon.com", "amazon.in",
+    "paypal.com",
+    "apple.com",
+    "microsoft.com"
+]
+
+def strong_phishing_check(url, domain):
+    norm_domain = normalize_text(domain)
+    original_domain = domain.lower()
+
+    brands = ["google", "facebook", "amazon", "paypal", "apple", "microsoft"]
+
+    # ✅ Extract real domain (IMPORTANT FIX)
+    ext = tldextract.extract(original_domain)
+    real_domain = ext.domain + "." + ext.suffix   # e.g. amazon.in
+
+    core = ext.domain   # cleaner than split(".")[0]
+    norm_core = normalize_text(core)
+
+    for brand in brands:
+
+        # =========================
+        # ✅ 0. Allow real trusted domains
+        # =========================
+        if real_domain in TRUSTED_DOMAINS:
+            return False, ""
+
+        # =========================
+        # 🔥 1. Exact brand misuse
+        # =========================
+        if brand in norm_domain and real_domain not in TRUSTED_DOMAINS:
+            return True, f"Impersonates {brand}"
+
+        # =========================
+        # 🔥 2. Typo attack
+        # =========================
+        if is_similar(norm_core, brand) and norm_core != brand:
+            return True, f"Looks similar to {brand} (possible typo attack)"
+
+    return False, ""
 import requests
 
 def detect_protocol(domain):
