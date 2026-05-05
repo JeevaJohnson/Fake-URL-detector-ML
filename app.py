@@ -828,7 +828,7 @@ def final_decision(url):
     else:
         label = "Legitimate"
     if prob < 0.3 and h_score > 0.3:
-    label = "Suspicious"    
+        label = "Suspicious"    
 
     # =========================
     # 🛡 TRUST OVERRIDE
