@@ -181,7 +181,7 @@ def final_decision(url, calibrated_model):
     # =========================
     # 🤖 MODEL + HEURISTICS
     # =========================
-    prob, features = model_predict(url, calibrated_model)
+    prob, features = model_predict(url)
     h_score, _ = heuristic_checks(url, domain, features)
     rep = reputation_check(domain)
 
