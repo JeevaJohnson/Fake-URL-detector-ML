@@ -45,6 +45,67 @@ LEGIT_WORDS = ["wiki", "docs", "api", "github", "stackoverflow"]
 app = Flask(__name__)
 
 import re
+def google_safe_check(url):
+    
+    
+    endpoint = f"https://safebrowsing.googleapis.com/v4/threatMatches:find?key={API_KEY}"
+
+    body = {
+        "client": {"clientId": "project", "clientVersion": "1.0"},
+        "threatInfo": {
+            "threatTypes": ["MALWARE", "SOCIAL_ENGINEERING"],
+            "platformTypes": ["ANY_PLATFORM"],
+            "threatEntryTypes": ["URL"],
+            "threatEntries": [{"url": url}]
+        }
+    }
+
+    try:
+        res = requests.post(endpoint, json=body)
+        return 1 if res.status_code == 200 and res.json() else 0
+    except:
+        return 0
+
+
+def domain_age(domain):
+    try:
+        w = whois.whois(domain)
+        creation = w.creation_date
+        if isinstance(creation, list):
+            creation = creation[0]
+        return (datetime.now() - creation).days
+    except:
+        return -1
+
+@lru_cache(maxsize=1000)
+def has_dns(domain):
+    try:
+        import socket
+        socket.gethostbyname(domain)
+        return 1
+    except:
+        return None   # ← CRITICAL CHANGE
+
+
+@lru_cache(maxsize=1000)
+def has_ssl(domain):
+    try:
+        ctx = ssl.create_default_context()
+        with socket.create_connection((domain, 443), timeout=3) as sock:
+            with ctx.wrap_socket(sock, server_hostname=domain):
+                return 1
+    except:
+        return None   # ← NOT False
+
+
+import requests
+
+def detect_protocol(domain):
+    try:
+        requests.get("https://" + domain, timeout=2)
+        return "https"
+    except:
+        return "http"
 
 def heuristic_checks(url, domain, features):
     h_score = 0
