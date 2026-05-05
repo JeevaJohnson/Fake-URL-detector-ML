@@ -112,7 +112,7 @@ def build_output(label, confidence, reasons, is_https):
     return label, confidence, final_reasons
 
     
-def final_decision(url, calibrated_model):
+def final_decision(url):
     url = normalize_url(url)
 
     parsed = urlparse(url)
